@@ -164,7 +164,7 @@ module.exports = {
       },
       {
         test: /\.less$/,
-        loader: 'style!css?importLoaders=1&modules=true&!postcss!less-loader'
+        loader: 'style!css?importLoaders=1&modules=true&localIdentName=[name]__[local]--[hash:base64:5]!postcss!less-loader'
       }
       // ** STOP ** Are you adding a new loader?
       // Remember to add the new extension(s) to the "url" loader exclusion list.
