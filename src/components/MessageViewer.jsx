@@ -3,17 +3,16 @@ import MessageList from './MessageList';
 import MessagePane from './MessagePane';
 import styles from './MessageViewer.less';
 
-
 export default class MessageViewer extends React.Component {
-
-  state = {
-    /* fill me in */
+  constructor(props) {
+    super(props);
+    this.state = {messages: [...props.messages]};
   }
 
   render() {
     return (
       <div className={styles.container}>
-        <MessageList />
+        <MessageList messages={this.state.messages}/>
         <MessagePane />
       </div>
     );

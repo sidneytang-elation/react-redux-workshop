@@ -3,6 +3,7 @@ import MessageViewer from './components/MessageViewer';
 import logo from './logo.svg';
 import './App.css';
 
+import messages from './data/messages';
 
 class App extends Component {
   render() {
@@ -12,7 +13,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React/Redux/ES6</h2>
         </div>
-        <MessageViewer />
+        <MessageViewer messages={messages}/>
       </div>
     );
   }
