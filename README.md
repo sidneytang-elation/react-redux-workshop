@@ -3,6 +3,7 @@ In this workshop, we're going to get familiar with React (and later, Redux) by b
 
 Some helpful links:
 - [Official React docs](https://facebook.github.io/react/docs/hello-world.html)
+    - If you don't want to or have time to read all of the docs, try to at least read [Thinking in React](https://facebook.github.io/react/docs/thinking-in-react.html)
 - [Official React tutorial](https://facebook.github.io/react/tutorial/tutorial.html)
 
 *Note: This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).*
@@ -15,6 +16,8 @@ After cloning this repo, run `npm install` inside the repo's root directory (it 
 The above is what you should see in the browser when you start up the dev server.
 
 **Note**: If you encounter an error running `npm install`, you may need to update your installation of Node. For Elation's main app in particular, you'll need v4 or higher, with v6 or higher being strongly preferred (as well as `npm` v3 or higher). You can check out http://www.hostingadvice.com/how-to/update-node-js-latest-version/ for some examples on how to update Node.
+
+It is also strongly recommended that you install the [React Developer Tools Chrome extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en). This will add a tab called React to your developer tools pane where you can inspect your component tree and each component's state and props.
 
 ## Building a simple message viewer component
 
