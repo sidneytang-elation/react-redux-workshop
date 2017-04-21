@@ -73,19 +73,32 @@ export default class MyComponent extends React.Component {
     }
 }
 ```
-- To render a component for each item in an array, the standard convention is to use `Array.map`:
+- To render a component for each item in an array, the standard convention is to use `Array.map`. When doing this, you need to give each rendered component a key that uniquely identifies it. Most of the time, it should be clear what to use as the key - for example, if you're rendering a list of pictures based on an array of users, the natural key to use would be the user ID.
 ```javascript
-render() {
-    const words = ['welcome', 'to', 'react', 'redux'];
-    return (
-      <div>
-        // This will render four <span> children for the root <div>,
-        // containing the text 'welcome', 'to', 'react', and 'redux',
-        // respectively.
-        {words.map(word => <span>{word}</span>)}
-      </div>
-    )
-}
+const words = ['welcome', 'to', 'react', 'redux'];
+export default class MyComponent extends React.Component {
+    // ... other component functions
+    render() {
+      // This will render:
+      // <div>
+      //   <span>welcome</span>
+      //   <span>to</span>
+      //   <span>react</span>
+      //   <span>redux</span>
+      // </div>
+      return (
+        <div>
+          // The key is defined here as the word itself to keep things
+          // simple, but this is probably a bad key for this specific
+          // code snippet. What if another 'welcome' string gets added
+          // to the words array? Actually, there is no good key to use
+          // for the words array unless we assume the array is immutable
+          // (in which case the word itself would be a good key, since
+          // each word is currently unique).
+          {words.map(word => <span key={word}>{word}</span>)}
+        </div>
+      );
+    }
 ```
 - The simplest way to handle form fields in React is to make each input controlled by component state. To do this, give the form (in this case `MessagePane.jsx`) an initial state that contains all the form field values. Make sure the values are initialized to an empty string. Then, in the `render` function, give each input element a `value` prop that equals the corresponding value in state, as well as an `onChange` prop that responds to input change events by updating the form state. The simplest version of an `onChange` handler looks something like:
 ```javascript
