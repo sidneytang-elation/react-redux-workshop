@@ -1,39 +1,26 @@
 import React from 'react';
-import shortid from 'shortid';
+import { connect } from 'react-redux';
 import MessageList from './MessageList';
 import MessagePane from './MessagePane';
+import LoudMessagePane from './LoudMessagePane';
 import styles from './MessageViewer.less';
-import { default as messageData } from '../data/messages';
 
 
-export default class MessageViewer extends React.Component {
+const mapStateToProps = state => ({
+  rightPaneIsLoud: state.messages.rightPaneIsLoud
+});
 
-  state = {
-    messages: messageData
-  }
-
-  saveMessage = ({ title, author, body }) => {
-    const { messages } = this.state;
-    const newMessages = [
-      ...messages,
-      {
-        id: shortid.generate(),
-        title,
-        author,
-        body
-      }
-    ]
-    this.setState({ messages: newMessages });
-  }
-
+class MessageViewer extends React.Component {
   render() {
-    const { messages } = this.state;
+    const { rightPaneIsLoud } = this.props;
 
     return (
       <div className={styles.container}>
-        <MessageList messages={messages} />
-        <MessagePane onSave={this.saveMessage} />
+        <MessageList />
+        {rightPaneIsLoud ? <LoudMessagePane /> : <MessagePane />}
       </div>
     );
   }
 }
+
+export default connect(mapStateToProps)(MessageViewer);

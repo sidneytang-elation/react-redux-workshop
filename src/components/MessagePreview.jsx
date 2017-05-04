@@ -1,23 +1,35 @@
 import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
 import cn from 'classnames';
 import styles from './MessagePreview.less';
+import { setSelectedMessageId } from '../modules/messages';
 
 
-export default class MessagePreview extends React.Component {
+const mapStateToProps = (state, ownProps) => ({
+  message: state.messages.byId[ownProps.messageId],
+  selected: ownProps.messageId === state.messages.selectedMessageId
+});
+
+const mapDispatchToProps = dispatch => ({
+  selectMessage: (id) => {
+    dispatch(setSelectedMessageId(id));
+  }
+})
+
+class MessagePreview extends React.Component {
 
   static propTypes = {
     message: PropTypes.object.isRequired
   }
 
-  state = { selected: false }
-
   handleClick = () => {
-    this.setState({ selected: !this.state.selected });
+    const { message, selected, selectMessage } = this.props;
+
+    selectMessage(selected ? null : message.id);
   }
 
   render() {
-    const { message } = this.props;
-    const { selected } = this.state;
+    const { message, selected } = this.props;
 
     return (
       <div className={cn(styles.container, selected && styles.selected)} onClick={this.handleClick}>
@@ -29,3 +41,5 @@ export default class MessagePreview extends React.Component {
     );
   }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagePreview);

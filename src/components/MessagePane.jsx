@@ -1,14 +1,22 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import { connect } from 'react-redux';
+import shortid from 'shortid';
 import Button from './Button';
 import Input from './Input';
 import styles from './MessagePane.less';
+import { createMessage, setRightPaneIsLoud } from '../modules/messages';
 
 
-export default class MessagePane extends React.Component {
-
-  static propTypes = {
-    onSave: PropTypes.func.isRequired
+const mapDispatchToProps = dispatch => ({
+  save: (message) => {
+    dispatch(createMessage(message));
+  },
+  switchPane: () => {
+    dispatch(setRightPaneIsLoud(true));
   }
+});
+
+class MessagePane extends React.Component {
 
   state = {
     title: '',
@@ -21,10 +29,11 @@ export default class MessagePane extends React.Component {
   }
 
   handleSave = () => {
-    const { onSave } = this.props;
+    const { save } = this.props;
     const { title, author, body } = this.state;
 
-    onSave({
+    save({
+      id: shortid.generate(),
       title,
       author,
       body
@@ -33,6 +42,10 @@ export default class MessagePane extends React.Component {
 
   handleReset = () => {
     this.setState({ title: '', author: '', body: '' });
+  }
+
+  handlePaneSwitch = () => {
+    this.props.switchPane();
   }
 
   render() {
@@ -47,9 +60,14 @@ export default class MessagePane extends React.Component {
         <Input value={author} name="author" onChange={this.handleChange} />
         <label className={styles.label}>Body</label>
         <Input value={body} name="body" onChange={this.handleChange} />
-        <Button className={styles.save} onClick={this.handleSave}>Save</Button>
-        <Button onClick={this.handleReset}>Reset</Button>
+        <div className={styles.buttonContainer}>
+          <Button className={styles.save} onClick={this.handleSave}>Save</Button>
+          <Button onClick={this.handleReset}>Reset</Button>
+          <Button className={styles.getLoud} onClick={this.handlePaneSwitch}>Get Loud</Button>
+        </div>
       </div>
     );
   }
 }
+
+export default connect(null, mapDispatchToProps)(MessagePane);
