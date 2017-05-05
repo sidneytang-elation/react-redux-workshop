@@ -27,7 +27,7 @@ export const getMessages = createSelector(
   // The first argument to `createSelector` is either a single selector or an array of
   // selectors that the selector we're creating depends on. For this selector, we depend
   // on the messages stored in `messagesReducer`.
-  (state) => state.messages.byId, // replace this empty object with what we actually want
+  (state) => state.messages.byId,
   // The second argument to `createSelector` is a function that uses the piece(s) of data
   // selected by the selector(s) in the first argument and returns the derived data we
   // want to use in our components - so this function should return the sorted messages array.
