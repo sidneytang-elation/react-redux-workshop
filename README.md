@@ -1,134 +1,58 @@
 ## Goal
-In this workshop, we're going to get familiar with React (and later, Redux) by building a simple message viewer component that supports listing messages, displaying message contents, and adding messages.
+In this part of the workshop, we're going to expand our message viewer component with additional functionality that Redux is well-suited to handle ([Part 1 of the workshop](https://github.com/sidneytang-elation/react-redux-workshop/blob/master/README.md), in case you missed it).
 
-Some helpful links:
-- [Official React docs](https://facebook.github.io/react/docs/hello-world.html)
-    - If you don't want to or have time to read all of the docs, try to at least read [Thinking in React](https://facebook.github.io/react/docs/thinking-in-react.html)
-- [Official React tutorial](https://facebook.github.io/react/tutorial/tutorial.html)
-
-*Note: This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).*
+Some helpful links to read:
+- [Redux](http://redux.js.org/docs/basics/) (recommended)
+  - there's a lot of info here, but Basics is probably the best place to start.
+- [Redux with React](http://redux.js.org/docs/basics/UsageWithReact.html) (recommended)
+- [Reselect](https://github.com/reactjs/reselect) (only if you really want to)
 
 ## Setup
-After cloning this repo, run `npm install` inside the repo's root directory (it should be the same directory this README is in) to install dependencies. Then, run `npm start` to run the app in development mode (we won't concern ourselves with production mode for now); this should open http://localhost:3000 in your browser. In development mode, hot reloading is enabled, so any CSS/LESS changes and React component changes you make will automatically be reflected in your browser window without requiring a page refresh.
+We're going to pick up from where we left off in part 1, so it's assumed that you have some code you already wrote and want to build off of it. You can either `git checkout -b [new_branch_name]` or stick with your current branch.
 
-![Initial component](https://github.com/sidneytang-elation/react-redux-workshop/raw/master/images/react-workshop-app-initial.png "Initial component")
+There are several files you'll want to check out from the `redux_start` branch of the repo:
+```shell
+git checkout redux_start src/components/LoudMessagePane.jsx
+git checkout redux_start src/components/LoudMessagePane.less
+git checkout redux_start src/modules/messages/.
+git checkout redux_start src/store/.
+git checkout redux_start src/App.js
+git checkout redux_start package.json
+```
+Since there are some new dependencies declared in `package.json`, be sure to run `npm install` once you've checked these files out. Don't worry about files being overwritten - most of these files are new, and the two that aren't (`src/App.js` and `package.json`) were probably not touched in part 1 (even if they were, it's fine to overwrite them).
 
-The above is what you should see in the browser when you start up the dev server.
+**IMPORTANT**: Most of the files checked out above have been thoroughly commented - you can read through them for more information. They may help with understanding the spec and how to approach the task at hand.
 
-**Note**: If you encounter an error running `npm install`, you may need to update your installation of Node. For Elation's main app in particular, you'll need v4 or higher, with v6 or higher being strongly preferred (as well as `npm` v3 or higher). You can check out http://www.hostingadvice.com/how-to/update-node-js-latest-version/ for some examples on how to update Node.
+It is also strongly recommended that you install the [Redux DevTools Chrome extension](https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd?hl=en). This will add a button to the right of the address bar that toggles the Redux dev tools popup, where you can view the current state of the app, dispatch arbitrary actions, and time travel/replay actions.
 
-It is also strongly recommended that you install the [React Developer Tools Chrome extension](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en). This will add a tab called React to your developer tools pane where you can inspect your component tree and each component's state and props.
-
-## Building a simple message viewer component
+## Expanding our simple message viewer component
 
 ### Specifications
-- The left column (`src/components/MessageList.jsx`) should contain the list of messages:
-  - Each message has four properties: `id`, `title`, `author`, and `body`. The latter 3 properties should be displayed in the UI, while the `id` should be used as the component key when rendering the list of messages.
+- Left column (`src/components/MessageList.jsx`):
 
-  - You can find an array of sample messages in `src/data/messages.js`. This array should be used to seed the initial state of the message list.
+  - The list of messages should no longer reside in component state. Messages should be stored in `messagesReducer` and fed into `MessageList` with `mapStateToProps`/`connect`.
 
-  - Clicking a message when it's not highlighted should highlight the message, and clicking a message when it's highlighted should remove the highlight. Multiple messages can be highlighted at the same time.
+  - Messages should be displayed in alphabetical title order. New messages that are created should appear in their correct sorted place in the list, rather than blindly appended to the end of the list. You'll want to use a selector to handle this.
 
-- The right column (`src/components/MessagePane.jsx`) should contain a form that enables the user to create new messages:
+  - Multiple messages may no longer be selected at the same time. Only one message can be selected at a time. If a message is clicked while another message is selected, the other message should be deselected and the clicked message should be selected. If a message is clicked while it is already selected, it should be deselected and leave no messages selected. Keeping track of which message is selected should be done in Redux (`messagesReducer.js`), because the right column is going to want to know too.
 
-  - There should be 3 input fields: one each for title, author, and body, respectively.
+- Right column (`src/components/MessagePane.jsx`):
 
-  - There should be 2 buttons: one to save and create a new message, and one to reset the 3 input fields to empty.
+  - There should now be two modes for the right column: regular (`MessagePane.jsx`) and "loud" (`LoudMessagePane.jsx`). You do **NOT** need to retain the regular mode's form state between mode changes (so regular --> loud --> regular doesn't need to have the form fields in the same state they were in before switching to loud. Empty fields is fine).
 
-  - Messages should appear in the left column when created
+  - The regular mode is the same message creation form from part 1, with the addition of a button that can be clicked to switch to "loud" mode.
 
+  - The loud mode just displays the currently selected message's body (**IN LARGE AND OBNOXIOUS BOLD CAPS**, which is already handled by the included styles - all you need to do is render the text). If no message is currently selected, a message like "No message is currently selected" should be displayed instead of a message body. There should also be a button that can be clicked to switch back to regular mode.
 
-Here's an example of what the finished component might look like (note that your finished component doesn't need to look like this exactly - but it should contain the same form elements and show the same message properties in the message list):
-
-![Finished component](https://github.com/sidneytang-elation/react-redux-workshop/raw/master/images/react-workshop-app-goal.png "Finished component")
 
 ### Code Overview
-The components directory already contains three component files, along with their style files, but you'll most likely want to add a few more components. You won't need to concern yourself with modifying any directory other than `src/components` to complete the message viewer.
+There are two new directories to note: `modules/messages` and `store`.
 
-Note how each component's styles are located in their corresponding `.less` files - we're using CSS modules to locally scope styles so we don't have to deal with the headaches of global CSS. You can even use the exact same class name in multiple components' `.less` files and each one will be scoped to the corresponding component only. This is exactly what's being done in `MessageList.less`, `MessagePane.less`, and `MessageViewer.less` with the `.container` class. You can take a look at any of the three preexisting component files for an example of how to use the styles defined in the LESS modules (look at the import statements).
+`modules/messages` is a directory that contains the store data flow logic for messages, spread across multiple files: actions, selectors, and the reducer. This is a common pattern in the new modern part of Elation's front-end code.
+
+`store` is a directory that contains store setup logic. Its default export (specified in `store/index.js`) is the initialized store for the app. Everything else in the directory is just used to set up the store and should be considered "directory-private".
+
+For this part of the workshop, expect to only need to modify files in `src/components` and `src/modules/messages`. You may not even need to create any new files (after checking out the files as described in [Setup](#setup)).
 
 ### Tips
-- To define initial state for a component, you can use the class property syntax:
-```javascript
-export default class MyComponent extends React.Component {
-    state = { name: 'i am some initial name' }
-}
-```
-- To define functions inside React component classes, you will almost always want to use this syntax (class property arrow function):
-```javascript
-export default class MyComponent extends React.Component {
-    // Defines a function that can be referred to with `this.handleClick`,
-    // and called with `this.handleClick()`
-    handleClick = (clickEvent) => {
-      // When a function is defined this way, it gets bound to this
-      // component. Any `this` references will always refer to the
-      // component itself, even if the function is passed around
-      // to many places, such as callbacks for other functions.
-      //
-      // If handleClick was not bound to this component, the following
-      // call would probably fail if the function was passed outside of
-      // this component and called by something else (most likely a
-      // subcomponent), but since it's bound, we're ok.
-      this.setState({ dummyProperty: 'yay, no error' });
-    }
-}
-```
-- To render a component for each item in an array, the standard convention is to use `Array.map`. When doing this, you need to give each rendered component a key that uniquely identifies it. Most of the time, it should be clear what to use as the key - for example, if you're rendering a list of pictures based on an array of users, the natural key to use would be the user ID.
-```javascript
-const words = ['welcome', 'to', 'react', 'redux'];
-export default class MyComponent extends React.Component {
-    // ... other component functions
-    render() {
-      // This will render:
-      // <div>
-      //   <span>welcome</span>
-      //   <span>to</span>
-      //   <span>react</span>
-      //   <span>redux</span>
-      // </div>
-      return (
-        <div>
-          // The key is defined here as the word itself to keep things
-          // simple, but this is probably a bad key for this specific
-          // code snippet. What if another 'welcome' string gets added
-          // to the words array? Actually, there is no good key to use
-          // for the words array unless we assume the array is immutable
-          // (in which case the word itself would be a good key, since
-          // each word is currently unique).
-          {words.map(word => <span key={word}>{word}</span>)}
-        </div>
-      );
-    }
-```
-- The simplest way to handle form fields in React is to make each input controlled by component state. To do this, give the form (in this case `MessagePane.jsx`) an initial state that contains all the form field values. Make sure the values are initialized to an empty string. Then, in the `render` function, give each input element a `value` prop that equals the corresponding value in state, as well as an `onChange` prop that responds to input change events by updating the form state. The simplest version of an `onChange` handler looks something like:
-```javascript
-handleNameChange = (changeEvent) => {
-    this.setState({ name: changeEvent.target.value });
-}
-```
-- When handling the save button click for `MessagePane.jsx`, you have access to what the created message's title, author, and body should be (since there are form fields for them), but you will need to generate an ID for the new message yourself. This can be done by importing `shortid`.
-```javascript
-import shortid from 'shortid';
-// generates a unique ID
-shortid.generate();
-```
-- A very helpful utility for setting class names on components is the `classnames` npm package. Within our codebase, it's commonly imported as:
-```javascript
-import cn from 'classnames';
-// you could also do this, but `cn` is an established convention
-// and shorter to write
-import classnames from 'classnames';
-```
-`classnames` allows us to concatenate class names in a readable way, additionally supporting conditional concatenation. Here's an example:
-```javascript
-<div className={cn('hello', isSmart && 'genius', 'orange')} />
-```
-The output of this snippet when `isSmart` is true is:
-```javascript
-<div className="hello genius orange" />
-```
-If `isSmart` is false, the output is instead:
-```javascript
-<div className="hello orange" />
-```
-More specifically, any argument to the `cn`/`classnames` function that evaluates to falsy is excluded from the resulting class name.
+No tips in the README this time! Instead, you can read the comments in the files checked out during setup, or refer to the links listed in [Goal](#goal).
