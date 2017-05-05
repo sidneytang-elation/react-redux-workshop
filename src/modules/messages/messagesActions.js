@@ -38,10 +38,18 @@
 
  // A declaration to get you started
  export const CREATE_MESSAGE = 'CREATE_NEW_MESSAGE';
- export function createMessage() { // add any necessary parameters
+ export function createMessage(data) {
    return {
-     // fill me in
+     type: CREATE_MESSAGE,
+     data: data
    }
  }
 
+export const SELECT_MESSAGE = 'SELECT_MESSAGE';
+export function selectMessage(id) {
+    return {
+        type: SELECT_MESSAGE,
+        id: id
+    }
+}
  // ...plus more action type constants & action creators

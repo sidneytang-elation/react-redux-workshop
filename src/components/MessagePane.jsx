@@ -1,12 +1,14 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { createMessage } from '../modules/messages/messagesActions'
+
 import styles from './MessagePane.less';
 
-
-export default class MessagePane extends React.Component {
+class MessagePane extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {id: null, title: '', author: '', body: ''};
-    this.saveCallback = props.saveCallback || undefined;
+    this.state = {title: '', author: '', body: ''};
   }
 
   handleChange = (event) => {
@@ -20,15 +22,13 @@ export default class MessagePane extends React.Component {
   }
 
   handleSave = (event) => {
-    if (this.saveCallback) {
-        this.saveCallback({...this.state});
-    }
+    this.props.create({...this.state});
   }
 
   render() {
     return (
       <div className={styles.container}>
-        <h2>Create Message</h2>
+        <h2><span className={styles.closeButton}>×</span>Create Message</h2>
         <div className={styles.formRowHorizontal}>
             <label>
                 Title: <input name="title" value={this.state.title} onChange={this.handleChange}></input>
@@ -46,9 +46,21 @@ export default class MessagePane extends React.Component {
             </label>
         </div>
         <div className={styles.formRowHorizontal}>
-            <button>Save</button> <button onClick={this.handleReset}>Reset</button>
+            <button onClick={this.handleSave}>Save</button> <button onClick={this.handleReset}>Reset</button>
         </div>
       </div>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  create: (data) => {
+    dispatch(createMessage(data));
+  }
+});
+
+const mapStateToProps = (state, ownProps) => ({
+  
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagePane);

@@ -1,3 +1,7 @@
+import shortid from 'shortid';
+
+import { CREATE_MESSAGE, SELECT_MESSAGE } from './messagesActions';
+
 const initialState = {
   // Fill in initial state here.
   // This initial state definition should include all state properties used by
@@ -34,9 +38,9 @@ const initialState = {
       author: 'Arnold Schwarzenegger',
       body: 'I\'ll be back.'
     }
-  }
-  // gonna need to store a few more things here, too
+  },
 
+  selectedId: null
 }
 
 export default function messagesReducer(state = initialState, action) {
@@ -63,6 +67,20 @@ export default function messagesReducer(state = initialState, action) {
     // state.foo = 12345;
     // return state;
     //
+    case CREATE_MESSAGE:
+      let data = action.data;
+      let newMsgList = {...state.byId};
+      let id = shortid();
+      newMsgList[id] = {...data, id: id};
+      return {
+        ...state,
+        byId: newMsgList
+      };
+    case SELECT_MESSAGE:
+      return {
+        ...state,
+        selectedId: action.id
+      };
     default:
       return state;
   }
