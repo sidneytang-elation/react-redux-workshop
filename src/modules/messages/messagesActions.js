@@ -36,16 +36,9 @@
  *   The component can then dispatch the action by calling `this.props.setWheels(28193, 7)`.
  */
 
- // A few declarations to get you started
+ // A declaration to get you started
  export const CREATE_MESSAGE = 'CREATE_NEW_MESSAGE';
  export function createMessage() { // add any necessary parameters
-   return {
-     // fill me in
-   }
- }
-
- export const SET_SELECTED_MESSAGE_ID = 'SET_SELECTED_MESSAGE_ID';
- export function setSelectedMessageId() { // add any necessary parameters
    return {
      // fill me in
    }
