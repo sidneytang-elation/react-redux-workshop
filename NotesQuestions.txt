@@ -1,0 +1,5 @@
+ReactJS Notes/Questions
+
+    - Components not declaring their props feels weird. What's the normal way to find out what props a component you're using supports?
+    - Why isn't render() an arrow function if we recommend those generally?
+    - What sequence are imports done in? Is there a standard to follow?
