@@ -1,39 +1,35 @@
 import React from 'react';
+import { connect } from 'react-redux'
+import { getIsLoud } from '../modules/messages/messagesSelectors'
+import LoudMessagePane from './LoudMessagePane';
 import MessageList from './MessageList';
 import MessagePane from './MessagePane';
-import shortid from 'shortid';
 import styles from './MessageViewer.less';
 
+const mapStateToProps = (state, ownProps) => ({
+    currentlyLoud: getIsLoud(state),
+});
 
-export default class MessageViewer extends React.Component {
-
-    state = {
-        messages: [
-            { id: shortid.generate(), title: 'Forrest Gump', author: 'Tom Hanks', body: 'My mama always said life was like a box of chocolates. You never know what you\'re gonna get.' },
-            { id: shortid.generate(), title: 'The Godfather', author: 'Marlon Brando', body: 'I\'m gonna make him an offer he can\'t refuse.' },
-            { id: shortid.generate(), title: 'The Terminator', author: 'Arnold Schwarzenegger', body: 'I\'ll be back.' },
-        ]
-    }
-
-    createMessage = (messageContent) => {
-        const {title, author, body} = messageContent;
-        this.setState({
-            messages: this.state.messages.concat({
-                    id: shortid.generate(),
-                    ...{title, author, body},
-                }
-            ),
-        });
-    }
+class MessageViewer extends React.Component {
 
     render() {
 
+        // QUESTION - Is there a nicer way to nest this condition below?
+        let messagePane;
+        if (this.props.currentlyLoud) {
+            messagePane = <LoudMessagePane/>
+        }
+        else {
+            messagePane = <MessagePane/>
+        }
+
         return (
             <div className={styles.container}>
-                <MessageList messages={this.state.messages}/>
-                <MessagePane
-                    onSave={(messageContents) => this.createMessage(messageContents)}/>
+                <MessageList/>
+                {messagePane}
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps)(MessageViewer);

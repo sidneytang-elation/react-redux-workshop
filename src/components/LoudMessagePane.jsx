@@ -1,5 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { setLoudMode } from '../modules/messages/messagesActions';
+import { getCurrentMessage } from '../modules/messages/messagesSelectors';
 import styles from './LoudMessagePane.less';
 
 
@@ -18,7 +20,7 @@ import styles from './LoudMessagePane.less';
  *   For example, <SomeComponent id={389} /> --> ownProps.id === 389
  */
 const mapStateToProps = (state, ownProps) => ({
-  // fill me in
+    message: getCurrentMessage(state),
 });
 
 /**
@@ -38,7 +40,9 @@ const mapStateToProps = (state, ownProps) => ({
  * - the `ownProps` parameter is the same as the `ownProps` parameter for `mapStateToProps` above.
  */
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  // fill me in
+    quietDown: () => {
+        dispatch(setLoudMode(false));
+    },
 });
 
 /**
@@ -52,11 +56,18 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
  * Redux makes this a lot simpler.
  */
 class LoudMessagePane extends React.Component {
-  render() {
-    return (
-      <div className={styles.container}>
-        Fill me in with actual content!
-      </div>
+
+    quietDown = () => {
+        this.props.quietDown();
+    }
+
+    render() {
+        const messageBody = this.props.message ? this.props.message.body : "(choose a message)";
+        return (
+            <div className={styles.container}>
+                {messageBody}<br/>
+                <button onClick={this.quietDown}>quiet down please</button>
+            </div>
     );
   }
 }

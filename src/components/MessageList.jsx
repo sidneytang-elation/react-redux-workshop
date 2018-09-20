@@ -1,10 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { getMessages } from '../modules/messages/messagesSelectors';
 import MessageListEntry from './MessageListEntry';
 import styles from './MessageList.less';
 
+const mapStateToProps = (state, ownProps) => ({
+    messages: getMessages(state),
+});
 
-export default class MessageList extends React.Component {
+class MessageList extends React.Component {
 
     static propTypes = {
         /**
@@ -32,3 +37,5 @@ export default class MessageList extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps)(MessageList);

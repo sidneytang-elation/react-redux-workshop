@@ -1,10 +1,17 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import cn from 'classnames';
+import { selectMessage } from '../modules/messages/messagesActions';
 import styles from './MessageListEntry.less';
 
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    setCurrent: () => {
+        dispatch(selectMessage(ownProps.message.id));
+    }
+});
 
-export default class MessageListEntry extends React.Component {
+class MessageListEntry extends React.Component {
 
     static propTypes = {
         /**
@@ -15,25 +22,24 @@ export default class MessageListEntry extends React.Component {
             title: PropTypes.string,
             author: PropTypes.string,
             body: PropTypes.string,
+            current: PropTypes.bool
         }),
     }
 
-    constructor(props) {
-        super(props);
-        this.state = {selected: false};
-    }
-
     onClick = () => {
-        this.setState({selected: !this.state.selected});
+        this.props.setCurrent();
     }
 
     render() {
+        const message = this.props.message;
         return (
-            <li className={cn(styles.listItem, this.state.selected && styles.activeItem)}
+            <li className={cn(styles.listItem, message.current && styles.activeItem)}
                 onClick={this.onClick}>
-                <b>{this.props.message.title}</b> - {this.props.message.author}<br/>
-                <i>{this.props.message.body}</i>
+                <b>{message.title}</b> - {message.author}<br/>
+                <i>{message.body}</i>
             </li>
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(MessageListEntry);

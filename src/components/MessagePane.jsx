@@ -1,17 +1,22 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import shortid from 'shortid';
+import { createMessage, setLoudMode } from '../modules/messages/messagesActions';
 import styles from './MessagePane.less';
 
-export default class MessagePane extends React.Component {
+const mapDispatchToProps = (dispatch, ownProps) => ({
+    createMessage: (id, title, author, body) => {
+        dispatch(createMessage(id, title, author, body));
+    },
+    getLoud: () => {
+        dispatch(setLoudMode(true));
+    },
+});
+
+class MessagePane extends React.Component {
 
     static propTypes = {
-        /**
-         * A function that takes title, author, body for us to create a new
-         * message with.
-         */
-        onSave: PropTypes.func.isRequired,
     }
-
 
     constructor(props) {
         super(props);
@@ -34,6 +39,19 @@ export default class MessagePane extends React.Component {
 
     clearFields = () => {
         this.setState(MessagePane.getInitialState());
+    }
+
+    saveMessage = () => {
+        this.props.createMessage(
+            shortid.generate(),
+            this.state.title,
+            this.state.author,
+            this.state.body,
+        )
+    }
+
+    getLoud = () => {
+        this.props.getLoud();
     }
 
     render() {
@@ -60,13 +78,13 @@ export default class MessagePane extends React.Component {
                     onChange={this.handleChange}/><br/>
 
                 <div className={styles.actionsContainer}>
-                    <button
-                        onClick={() => this.props.onSave({title, author, body})}>Save</button>
-
-                    <button
-                        onClick={this.clearFields}>Reset</button>
+                    <button onClick={this.saveMessage}>Save</button>
+                    <button onClick={this.clearFields}>Reset</button>
+                    <button onClick={this.getLoud}>GET LOUD</button>
                 </div>
             </div>
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(MessagePane);

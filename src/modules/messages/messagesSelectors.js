@@ -18,6 +18,15 @@
  */
 import { createSelector } from 'reselect';
 
+export const getMessagesById = state => state.messages.byId;
+export const getCurrentMessageId = state => state.messages.currentMessageId;
+export const getIsLoud = state => state.messages.isLoudMode;
+
+export const getCurrentMessage = createSelector(
+    [getMessagesById, getCurrentMessageId],
+    (messagesById, currentMessageId) => {
+        return messagesById[currentMessageId];
+    });
 
 /**
  * This selector should return the list of messages as an array, sorted alphabetically
@@ -29,14 +38,14 @@ import { createSelector } from 'reselect';
  * case, that value is the sorted array of messages.
  */
 export const getMessages = createSelector(
-  // The first argument to `createSelector` is either a single selector or an array of
-  // selectors that the selector we're creating depends on. For this selector, we depend
-  // on the messages stored in `messagesReducer`.
-  (state) => {}, // replace this return value with what we actually want
-  // The second argument to `createSelector` is a function that uses the piece(s) of data
-  // selected by the selector(s) in the first argument and returns the derived data we
-  // want to use in our components - so this function should return the sorted messages array.
-  (messagesById) => {
-    return []; // replace this return value with what we actually want
-  }
-)
+    [getMessagesById, getCurrentMessageId],
+    (messagesById, currentMessageId) => {
+        return Object.keys(messagesById).map((messageId) => {
+            const message = messagesById[messageId];
+            return {
+                ...message,
+                current: message.id === currentMessageId,
+            }
+        }).sort((a, b) => a.title.localeCompare(b.title));
+    }
+);
