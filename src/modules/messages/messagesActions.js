@@ -38,18 +38,23 @@
 
  // A declaration to get you started
  export const CREATE_MESSAGE = 'CREATE_NEW_MESSAGE';
- export function createMessage(id, title, author, body) {
+ export function createMessage({id, title, author, body}) {
    return {
-     type: CREATE_MESSAGE,
-     ...{id, title, author, body},
-   }
+       type: CREATE_MESSAGE,
+       message: {
+           id,
+           title,
+           author,
+           body
+       },
+    }
  }
 
  export const SELECT_MESSAGE = 'SELECT_MESSAGE';
  export function selectMessage(messageId) {
    return {
      type: SELECT_MESSAGE,
-     messageId: messageId,
+     messageId,
    }
  }
 
@@ -57,6 +62,6 @@
  export function setLoudMode(isLoudMode) {
    return {
      type: SET_LOUD_MODE,
-     isLoudMode: isLoudMode,
+     isLoudMode,
    }
  }

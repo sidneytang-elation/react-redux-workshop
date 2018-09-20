@@ -18,19 +18,19 @@ const initialState = {
   //
   // The message list has been filled out already, using the data from `src/data/messages.js`.
   byId: {
-        '122019': {
+        122019: {
           id: '122019',
           title: 'The Godfather',
           author: 'Marlon Brando',
           body: 'I\'m gonna make him an offer he can\'t refuse.'
         },
-        '289103': {
+        289103: {
           id: '289103',
           title: 'Forrest Gump',
           author: 'Tom Hanks',
           body: 'My mama always said life was like a box of chocolates. You never know what you\'re gonna get.'
         },
-        '938900': {
+        938900: {
           id: '938900',
           title: 'The Terminator',
           author: 'Arnold Schwarzenegger',
@@ -71,15 +71,16 @@ export default function messagesReducer(state = initialState, action) {
             currentMessageId: action.messageId,
         }
     case CREATE_MESSAGE:
+        const message = action.message;
         return {
             ...state,
             byId: {
                 ...state.byId,
-                [action.id]: {
-                    id: action.id,
-                    title: action.title,
-                    author: action.author,
-                    body: action.body,
+                [message.id]: {
+                    id: message.id,
+                    title: message.title,
+                    author: message.author,
+                    body: message.body,
                 }
             }
         }

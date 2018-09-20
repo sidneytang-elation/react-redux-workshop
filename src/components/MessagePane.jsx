@@ -6,7 +6,7 @@ import styles from './MessagePane.less';
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     createMessage: (id, title, author, body) => {
-        dispatch(createMessage(id, title, author, body));
+        dispatch(createMessage({id, title, author, body}));
     },
     getLoud: () => {
         dispatch(setLoudMode(true));
