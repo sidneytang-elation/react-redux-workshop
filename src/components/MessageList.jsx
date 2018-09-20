@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { getMessages } from '../modules/messages/messagesSelectors';
+import { messagePropType } from '../proptypes/messagesPropTypes';
 import MessageListEntry from './MessageListEntry';
 import styles from './MessageList.less';
 
@@ -12,15 +13,7 @@ const mapStateToProps = (state, ownProps) => ({
 class MessageList extends React.Component {
 
     static propTypes = {
-        /**
-         * A list of all of the messages we'll render
-         */
-        messages: PropTypes.arrayOf(PropTypes.shape({
-            id: PropTypes.string,
-            title: PropTypes.string,
-            author: PropTypes.string,
-            body: PropTypes.string,
-        })),
+        messages: PropTypes.arrayOf(messagePropType).isRequired,
     }
 
     render() {

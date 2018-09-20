@@ -1,8 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import cn from 'classnames';
 import { selectMessage } from '../modules/messages/messagesActions';
+import { messagePropType } from '../proptypes/messagesPropTypes';
 import styles from './MessageListEntry.less';
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -14,19 +14,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 class MessageListEntry extends React.Component {
 
     static propTypes = {
-        /**
-         * The message we'll render
-         */
-        message: PropTypes.shape({
-            id: PropTypes.string,
-            title: PropTypes.string,
-            author: PropTypes.string,
-            body: PropTypes.string,
-            current: PropTypes.bool
-        }),
+        message: messagePropType.isRequired,
     }
 
-    onClick = () => {
+    handleClick = () => {
         this.props.setCurrent();
     }
 
@@ -34,7 +25,7 @@ class MessageListEntry extends React.Component {
         const message = this.props.message;
         return (
             <li className={cn(styles.listItem, message.current && styles.activeItem)}
-                onClick={this.onClick}>
+                onClick={this.handleClick}>
                 <b>{message.title}</b> - {message.author}<br/>
                 <i>{message.body}</i>
             </li>
