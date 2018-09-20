@@ -59,11 +59,13 @@ export default class MessagePane extends React.Component {
                     value={body}
                     onChange={this.handleChange}/><br/>
 
-                <button
-                    onClick={() => this.props.onSave({title, author, body})}>Save</button>
+                <div className={styles.actionsContainer}>
+                    <button
+                        onClick={() => this.props.onSave({title, author, body})}>Save</button>
 
-                <button
-                    onClick={this.clearFields}>Reset</button>
+                    <button
+                        onClick={this.clearFields}>Reset</button>
+                </div>
             </div>
         );
     }
