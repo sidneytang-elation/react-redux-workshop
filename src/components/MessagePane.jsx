@@ -1,52 +1,66 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './MessagePane.less';
 
-const initialState = {
-    title: '',
-    author: '',
-    body: '',
-}
-
 export default class MessagePane extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {...initialState};
+
+    static propTypes = {
+        /**
+         * A function that takes title, author, body for us to create a new
+         * message with.
+         */
+        onSave: PropTypes.func.isRequired,
     }
 
-    handleChange = (changeEvent) => {
+
+    constructor(props) {
+        super(props);
+        this.state = MessagePane.getInitialState();
+    }
+
+    static getInitialState() {
+        return {
+          title: '',
+          author: '',
+          body: '',
+        }
+    }
+
+    handleChange = (event) => {
         this.setState({
-            [changeEvent.target.name]: changeEvent.target.value,
+            [event.target.name]: event.target.value,
         })
     }
 
     clearFields = () => {
-        this.setState({...initialState});
+        this.setState(MessagePane.getInitialState());
     }
 
     render() {
+        const {title, author, body} = this.state;
         return (
             <div className={styles.container}>
                 <p>Title</p>
                 <input
                     name="title"
                     type="text"
-                    value={this.state.title}
+                    value={title}
                     onChange={this.handleChange}/><br/>
                 <p>Author</p>
                 <input
                     name="author"
                     type="text"
-                    value={this.state.author}
+                    value={author}
                     onChange={this.handleChange}/><br/>
                 <p>Body</p>
                 <input
                     name="body"
                     type="text"
-                    value={this.state.body}
+                    value={body}
                     onChange={this.handleChange}/><br/>
 
                 <button
-                    onClick={() => this.props.onSave({...this.state,})}>Save</button>
+                    onClick={() => this.props.onSave({title, author, body})}>Save</button>
 
                 <button
                     onClick={this.clearFields}>Reset</button>
