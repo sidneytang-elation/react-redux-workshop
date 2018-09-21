@@ -1,0 +1,10 @@
+Notes/Questions
+
+    - What's the difference between:
+        import { getIsLoud } from '../modules/messages/messagesSelectors'
+        (and)
+        import getIsLoud from '../modules/messages/messagesSelectors'
+
+        ANSWER: So actually I struggled to find useful/concise documentation
+        for this behavior. I think maybe the latter only works if getIsLoud is
+        marked default? I'm honestly unclear. Anyone got a useful tutorial on this?

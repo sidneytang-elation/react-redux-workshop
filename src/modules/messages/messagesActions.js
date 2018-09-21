@@ -38,10 +38,30 @@
 
  // A declaration to get you started
  export const CREATE_MESSAGE = 'CREATE_NEW_MESSAGE';
- export function createMessage() { // add any necessary parameters
+ export function createMessage({id, title, author, body}) {
    return {
-     // fill me in
+       type: CREATE_MESSAGE,
+       message: {
+           id,
+           title,
+           author,
+           body
+       },
+    }
+ }
+
+ export const SELECT_MESSAGE = 'SELECT_MESSAGE';
+ export function selectMessage(messageId) {
+   return {
+     type: SELECT_MESSAGE,
+     messageId,
    }
  }
 
- // ...plus more action type constants & action creators
+ export const SET_LOUD_MODE = 'SET_LOUD_MODE';
+ export function setLoudMode(isLoudMode) {
+   return {
+     type: SET_LOUD_MODE,
+     isLoudMode,
+   }
+ }
